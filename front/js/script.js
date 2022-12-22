@@ -6,6 +6,7 @@ const affichageItems = async () => {
   if(datas === -1 ) {
     alert("erreur");
   }
+  
   let cards = '';
 
   datas.forEach((item) => {
