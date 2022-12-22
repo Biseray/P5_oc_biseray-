@@ -1,6 +1,5 @@
-const itemProduct = async () => {
+const showDetailItem = async () => {
   const item = document.querySelector('.item');
-  debugger;
   const datas = await get("http://localhost:3000/api/products");
   if (datas === -1) {
     alert("erreur");
@@ -8,4 +7,4 @@ const itemProduct = async () => {
   console.log(datas);
 };
 
-itemProduct();
+showDetailItem();
