@@ -4,8 +4,12 @@ const get = async (url) => {
         return await reponse.json();
     } 
     return -1 ;
+    
 
 }
+
+
+
 
 
 
