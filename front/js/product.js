@@ -1,7 +1,5 @@
 
 
-
-
 const showDetailItem = async () => {
   const item = document.querySelector('.item');
   const dataId = new URL(location.href).searchParams.get("id");
@@ -47,39 +45,37 @@ let id = datas._id;
 
   itemsColors.insertAdjacentHTML('beforeend', selectColor);
 
-
-  function addToCart(quantity, color) {
-    const itemsDetails = {
+  const details = (quantity, color) => {
+    // const itemsDetails = {
+    //       name: `${datas.name}`,
+    //       image: `${datas.imageUrl}`,
+    //       imageAlt: `${datas.altTxt}`,
+         
+    // };
+    const data = {
+      id: id,
+      quantity,
+      color,
+      // itemsDetails, 
       name: `${datas.name}`,
       image: `${datas.imageUrl}`,
       imageAlt: `${datas.altTxt}`,
-      description: `${datas.description}`,
-      
     };
-
-    const cartItem = {  
-      id,
-      quantity,
-      color,
-      itemsDetails,
-      
-    };
-
-    const cart = JSON.parse(localStorage.getItem("cart"));
     
-    cart.push(cartItem);
+    
+    localStorage.setItem(id , JSON.stringify(data));
 
-    localStorage.setItem('cart', JSON.stringify(cart));
   };
 
+  
   const ajoutPanier = document.getElementById('addToCart');
 
-  ajoutPanier.addEventListener('click', function () {
+  ajoutPanier.addEventListener('click', function() {
     const quantityItems = document.getElementById('quantity').value;
     const colorsItems = document.getElementById('colors').value;
     if (quantityItems >= 1 && quantityItems <= 100) {
       if (colorsItems) {
-        addToCart(quantityItems, colorsItems);
+        details(quantityItems, colorsItems);
         window.location.href = './cart.html';
       } else {
         alert('choisissez une couleur');
@@ -91,3 +87,6 @@ let id = datas._id;
 };
 
 showDetailItem();
+
+
+

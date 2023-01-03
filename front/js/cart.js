@@ -8,31 +8,43 @@ const afficherItemspanier = async () => {
     alert("erreur"), RedirectionJs;
 
   }
-
-
-  const articlePanier = document.getElementById('cart__items');
-  const cart = JSON.parse(localStorage.getItem('cart'))||[];
   
-  let  total = 0 ;
+  let cart = [];
+
+  const keyLength = localStorage.length;
+  for (let i = 0; i < keyLength; i++) {
+    const key = localStorage.getItem(localStorage.key(i)) 
+    const data = JSON.parse(key) 
+   console.log(data);
+   cart.push(data);
+  }
+  
+  const articlePanier = document.getElementById('cart__items');
+ 
+  
+
+
+
+  // let  total = 0 ;
  
   let cardsPanier = '';
 
 
   cart.forEach((item) => {
-    let article = cart.find( id => id == item.id && id.color == item.color);
-    if (article) { 
-      total.quantity += item.quantity;
+    //  let article = cart.find( a => a.id === item.id && a.color === item.color);
+    //  if (article) { 
+    //    article.quantity += item.quantity;
      
-    }else {
+    //  }else {
 
     cardsPanier +=
       `  <article class="cart__item" data-id="${item.id}" data-color="${item.color}">
         <div class="cart__item__img">
-          <img src="${item.itemsDetails.image}" alt="${item.itemsDetails.imageAlt}">
+          <img src="${item.image}" alt="${item.imageAlt}">
         </div>
         <div class="cart__item__content">
           <div class="cart__item__content__description">
-            <h2>${item.itemsDetails.name}</h2>
+            <h2>${item.name}</h2>
             <p>${item.color}</p>
             
           </div>
@@ -48,8 +60,8 @@ const afficherItemspanier = async () => {
         </div>
       </article> `
           ;
-     }   
-     console.log(`${total}`);
+      // }   
+     
   });
 
  
