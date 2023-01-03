@@ -17,7 +17,7 @@ const showDetailItem = async () => {
 
 
   }
-
+let id = datas._id;
 
 
   window.parent.document.title = `${datas.name}`;
@@ -57,14 +57,15 @@ const showDetailItem = async () => {
       
     };
 
-    const cartItem = {
-      dataId,
+    const cartItem = {  
+      id,
       quantity,
       color,
       itemsDetails,
+      
     };
 
-    const cart = JSON.parse(localStorage.getItem("cart"))|| [];
+    const cart = JSON.parse(localStorage.getItem("cart"));
     
     cart.push(cartItem);
 

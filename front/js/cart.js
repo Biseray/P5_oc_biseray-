@@ -11,20 +11,22 @@ const afficherItemspanier = async () => {
 
 
   const articlePanier = document.getElementById('cart__items');
-  const cart = JSON.parse(localStorage.getItem("cart"))|| [];
-
-console.log(cart);
+  const cart = JSON.parse(localStorage.getItem('cart'))||[];
+  
+  let  total = 0 ;
+ 
   let cardsPanier = '';
 
-  cart.forEach((item) => {
-    let articlePanier = cart.find( a => a.dataId === item.dataId && a.color === item.color);
-    if (articlePanier) {
-      articlePanier.quantity += item.quantity;
 
-    } else {
+  cart.forEach((item) => {
+    let article = cart.find( id => id == item.id && id.color == item.color);
+    if (article) { 
+      total.quantity += item.quantity;
+     
+    }else {
 
     cardsPanier +=
-      `  <article class="cart__item" data-id="${a.dataId}" data-color="${item.color}">
+      `  <article class="cart__item" data-id="${item.id}" data-color="${item.color}">
         <div class="cart__item__img">
           <img src="${item.itemsDetails.image}" alt="${item.itemsDetails.imageAlt}">
         </div>
@@ -45,12 +47,45 @@ console.log(cart);
           </div>
         </div>
       </article> `
-       
-       }
+          ;
+     }   
+     console.log(`${total}`);
   });
+
  
   articlePanier.innerHTML = cardsPanier;
 };
 
 
 afficherItemspanier();
+
+
+
+
+// utiliser dataset pour obtenir l'id 
+// let productId = document.getElementsByClassName('cart__item');
+//   productId.dataset.color; 
+  // console.log(productId);
+
+
+
+
+     //   let article = cart.find( a => a.id === item.id && a.color === item.color);
+    //  if (article) {
+    //   totalQuantity += item.quantity;
+    //  } else {
+    // cardPanier += `etc`
+// }
+
+
+
+// let ProduitDansLepanier= cart[0].id;
+// let totalQuantity = 0 
+
+
+// if (item.id === ProduitDansLepanier){
+//   totalQuantity += item.quantity ; 
+// }else {  
+//   totalQuantity = item.quantity;
+//   ProduitDansLepanier = item.id;
+// }
