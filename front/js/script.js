@@ -4,8 +4,11 @@ const affichageItems = async () => {
 
   const datas = await get("http://localhost:3000/api/products");
   if(datas === -1 ) {
+    const RedirectionJs = document.location.href = "./index.html";
     alert("erreur");
-  }
+    RedirectionJs;   
+
+  };
   
   let cards = '';
 
@@ -23,5 +26,6 @@ const affichageItems = async () => {
   items.innerHTML = cards;
 
 };
+
 
 affichageItems();

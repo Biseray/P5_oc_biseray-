@@ -1,21 +1,20 @@
 
 
 const showDetailItem = async () => {
-  const item = document.querySelector('.item');
   const dataId = new URL(location.href).searchParams.get("id");
 
 
 
   const datas = await get(`http://localhost:3000/api/products/${dataId}`);
   if (datas === -1) {
-    const RedirectionJs = document.location.href = "./index.html"
-    alert("erreur"), RedirectionJs;
+    const RedirectionJs = document.location.href = "./index.html";
+    alert("erreur produit introuvable"), RedirectionJs;
 
 
 
 
   }
-let id = datas._id;
+  
 
 
   window.parent.document.title = `${datas.name}`;
@@ -45,48 +44,23 @@ let id = datas._id;
 
   itemsColors.insertAdjacentHTML('beforeend', selectColor);
 
-  const details = (quantity, color) => {
-    // const itemsDetails = {
-    //       name: `${datas.name}`,
-    //       image: `${datas.imageUrl}`,
-    //       imageAlt: `${datas.altTxt}`,
-         
-    // };
-    const data = {
-      id: id,
-      quantity,
-      color,
-      // itemsDetails, 
-      name: `${datas.name}`,
-      image: `${datas.imageUrl}`,
-      imageAlt: `${datas.altTxt}`,
-    };
-    
-    
-    localStorage.setItem(id , JSON.stringify(data));
 
-  };
 
-  
+
   const ajoutPanier = document.getElementById('addToCart');
 
   ajoutPanier.addEventListener('click', function() {
     const quantityItems = document.getElementById('quantity').value;
-    const colorsItems = document.getElementById('colors').value;
-    if (quantityItems >= 1 && quantityItems <= 100) {
+    const colorsItems = document.getElementById('colors').value; 
       if (colorsItems) {
-        details(quantityItems, colorsItems);
-        window.location.href = './cart.html';
+        limiteQuantity(quantityItems);
+        addProduct(quantityItems, colorsItems, datas);
+        //  window.location.href = './cart.html';
       } else {
         alert('choisissez une couleur');
-      }
-    } else {
-      alert('choisissez une quantité entre 1 et 100 ');
-    }
+      };
+    
   });
 };
 
 showDetailItem();
-
-
-
