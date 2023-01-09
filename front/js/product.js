@@ -1,6 +1,7 @@
 
 
 const showDetailItem = async () => {
+  const item = document.querySelector('.item');
   const dataId = new URL(location.href).searchParams.get("id");
 
 
@@ -9,13 +10,8 @@ const showDetailItem = async () => {
   if (datas === -1) {
     const RedirectionJs = document.location.href = "./index.html";
     alert("erreur produit introuvable"), RedirectionJs;
-
-
-
-
   }
   
-
 
   window.parent.document.title = `${datas.name}`;
 
@@ -49,13 +45,13 @@ const showDetailItem = async () => {
 
   const ajoutPanier = document.getElementById('addToCart');
 
-  ajoutPanier.addEventListener('click', function() {
+  ajoutPanier.addEventListener('click', function () {
     const quantityItems = document.getElementById('quantity').value;
     const colorsItems = document.getElementById('colors').value; 
       if (colorsItems) {
-        limiteQuantity(quantityItems);
-        addProduct(quantityItems, colorsItems, datas);
-        //  window.location.href = './cart.html';
+        
+        addProduct(quantityItems, colorsItems, datas );
+        // window.location.href = './cart.html';
       } else {
         alert('choisissez une couleur');
       };
