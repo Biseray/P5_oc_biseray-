@@ -9,7 +9,7 @@ const afficherItemspanier = async () => {
 
   }
   window.parent.document.title = 'Panier';
-
+  console.log(datas);
 
 
 
@@ -57,6 +57,7 @@ const afficherItemspanier = async () => {
 
   articlePanier.innerHTML = cardsPanier;
 
+  // bouton suppression element
   const deleteItemButtons = document.querySelectorAll('.deleteItem');
   for (let a = 0; a < deleteItemButtons.length; a++) {
     deleteItemButtons[a].addEventListener('click', function () {
@@ -64,69 +65,66 @@ const afficherItemspanier = async () => {
       const id = elementToDelete.getAttribute('data-id');
       elementToDelete.remove();
       SupprimerProduit(id);
+      realodPage();
+
+      
     });
+    
   };
 
 
 
 
 
-
+  // modfication de la quantité dans le panier 
   const inputQuantities = document.querySelectorAll('.itemQuantity');
   inputQuantities.forEach((inputQuantity) => {
     inputQuantity.addEventListener('change', () => {
+
       let quantity = inputQuantity.value;
       let id = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.id;
       let color = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.color;
-      calculTotal2();
+      calculTotalQuantities();
       updateQuantity(id, color, quantity);
-      
+
+
     });
   });
 
 
-
-  const calculTotal2 = () => {
+  // calcul de la quantité  
+  const calculTotalQuantities = () => {
     const inputQuantities = document.querySelectorAll('.itemQuantity');
     let sum = 0;
-
     inputQuantities.forEach((inputQuantity) => {
-
       let quantity = parseInt(inputQuantity.value);
       let total = sum += quantity;
       const totalQuantity = document.getElementById('totalQuantity');
       totalQuantity.innerHTML = total;
     });
-
   };
-  calculTotal2();
+  calculTotalQuantities();
 
 
 
-const verificationPrix =(id) => {
-  datas.forEach((i) => {
-    idproduct = i.id;
-    price =i.price;
-    if (id === idproduct){
-      prix.innerHTML = `${price}€`
-    }
-
-  });
-};
-const prix = document.getElementById('price');
-
-console.log(prix);
-
-
-
-verificationPrix();
-
+  const prix = document.getElementById('price');
+  console.log(prix);
+  const verificationPrix = () => {
+    let panier = loadPanier();
+    datas.forEach((i) => {
+      let id = i._id;
+      let price = i.price;
+      let articleId = panier.find(a => a.id === id);
+      if (articleId) {
+      prix.innerHTML = price + "€";
+      };
+    });
+  };
+  verificationPrix();
 
 
 
 
-
- 
 };
 
 afficherItemspanier();
