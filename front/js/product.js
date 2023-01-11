@@ -1,7 +1,7 @@
 
 
 const showDetailItem = async () => {
-  const item = document.querySelector('.item');
+  
   const dataId = new URL(location.href).searchParams.get("id");
 
 

@@ -2,31 +2,52 @@ const realodPage = () => {
   window.location.href = './cart.html';
 };
 
-
 const limiteQuantity = (quantity) => {
-
   if (quantity < 1 || quantity > 100) {
     alert('choisissez une quantité entre 1 et 100 ');
     return false;
-  };
+  }
+ 
   return true;
 
 };
 
 
-const limtePanier = (id, quantity) => {
-  let panier = loadPanier();
-let article =   panier.find((i) => i.id === id && i.quantity === quantity);
-console.log(article.quantity);
-if (article > 100) { 
-  
-  alert('trop de quantité');
-  return false; 
 
-}
-return true; 
-}
+const panierVide = () => {
+  if (loadPanier().length === 0) {
+    alert('panier vide ! ');
+    window.location.href = './index.html';
+  };
+
+} ;
+
+
+
+
+
+
+
+
+
+// const limtePanier = (quantity, color, id ) => {
+//   let panier = loadPanier();
+// let articleDansLePanier =   panier.find((item) => id === item.id && color === item.color );
+
+// if (articleDansLePanier.quantity > 100) { 
+//   alert('trop de quantité');
+//   return false; 
+// };
+// alert('ok');
+// return false; 
+// };
+
+
+
+
+
 // local storage 
+
 const loadPanier = () => {
   return JSON.parse(localStorage.getItem('panier')) || [];
 
@@ -43,7 +64,7 @@ const savePanier = (panier) => {
 const updateQuantity = (id, color, quantity) => {
   const panier = loadPanier();
   let article = panier.find((item) => item.id === id && item.color === color);
-  if (article) {
+  if (article && limiteQuantity(quantity)) {
     article.quantity = quantity;
     savePanier(panier);
   };
@@ -51,7 +72,7 @@ const updateQuantity = (id, color, quantity) => {
 
 
 // delete element
-const SupprimerProduit = (id) => {
+const supprimerProduit = (id) => {
   const panier = loadPanier();
   for (let a = 0; a < panier.length; a++) {
     if (panier[a].id === id) {
@@ -62,22 +83,14 @@ const SupprimerProduit = (id) => {
   };
 };
 
-// verification du prix 
-// const verificationPrix = (id) => {
-//   const panier = loadPanier();
-//   panier.find((item) => item.id == id);
-  
-// } 
-
-
 
 
 // ajout au panier 
 
-const addProduct = (quantity, color, datas, ) => {
+const addProduct = (quantity, color, datas ) => {
 
   const panier = loadPanier();
-  
+  let quantiteValide = false ; 
   const productFind = panier.find(article => article.id === datas._id && article.color === color);
   if (productFind === undefined) {
     const product = {
@@ -89,17 +102,19 @@ const addProduct = (quantity, color, datas, ) => {
       imageAlt: `${datas.altTxt}`,
     };
     panier.push(product);
+    quantiteValide = limiteQuantity(quantity);
 
   } else if (productFind !== undefined) {
     productFind.quantity += parseInt(quantity);
-
+    quantiteValide = limiteQuantity(productFind.quantity);
+    
 
   };
-  if (limiteQuantity(quantity) === true) {
+  if (quantiteValide === true) {
    
     savePanier(panier);
     window.location.href = './cart.html';
-  }
+  };
 
   console.log(productFind);
 
