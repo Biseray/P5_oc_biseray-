@@ -1,6 +1,7 @@
 const realodPage = () => {
   window.location.href = './cart.html';
 };
+const datasProduct = fetch('http://localhost:3000/api/products/');
 
 const limiteQuantity = (quantity) => {
   if (quantity < 1 || quantity > 100) {
@@ -20,27 +21,8 @@ const panierVide = () => {
     window.location.href = './index.html';
   };
 
-} ;
+};
 
-
-
-
-
-
-
-
-
-// const limtePanier = (quantity, color, id ) => {
-//   let panier = loadPanier();
-// let articleDansLePanier =   panier.find((item) => id === item.id && color === item.color );
-
-// if (articleDansLePanier.quantity > 100) { 
-//   alert('trop de quantité');
-//   return false; 
-// };
-// alert('ok');
-// return false; 
-// };
 
 
 

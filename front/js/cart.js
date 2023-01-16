@@ -1,6 +1,5 @@
 
 
-
 const afficherItemspanier = async () => {
 
   const datas = await get(`http://localhost:3000/api/products/`);
@@ -8,7 +7,7 @@ const afficherItemspanier = async () => {
     const RedirectionJs = document.location.href = "./index.html";
     alert("erreur"), RedirectionJs;
 
- }
+  }
   window.parent.document.title = 'Panier';
   console.log(datas);
 
@@ -16,13 +15,13 @@ const afficherItemspanier = async () => {
 
   const articlePanier = document.getElementById('cart__items');
 
-  panierVide();
+
 
   let cardsPanier = '';
 
   const panier = loadPanier();
   panier.forEach((item) => {
-    let details = datas.find((i) => item.id === i._id ) 
+    let details = datas.find((i) => item.id === i._id)
     cardsPanier +=
       `  <article class="cart__item" data-id="${item.id}" data-color="${item.color}">
         <div class="cart__item__img">
@@ -49,12 +48,12 @@ const afficherItemspanier = async () => {
 
 
   });
-  console.log(cardsPanier);
+  // console.log(cardsPanier);
   articlePanier.innerHTML = cardsPanier;
 
   // bouton suppression element
   const deleteItemButtons = document.querySelectorAll('.deleteItem');
-const inputQuantities = document.querySelectorAll('.itemQuantity');
+  const inputQuantities = document.querySelectorAll('.itemQuantity');
 
 
 
@@ -76,7 +75,8 @@ const inputQuantities = document.querySelectorAll('.itemQuantity');
 
 
   // modfication de la quantité dans le panier 
-  
+
+
   inputQuantities.forEach((inputQuantity) => {
     inputQuantity.addEventListener('change', () => {
       let quantity = inputQuantity.value;
@@ -84,47 +84,251 @@ const inputQuantities = document.querySelectorAll('.itemQuantity');
       let color = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.color;
       limiteQuantity(quantity);
       calculTotalQuantities();
-      calculTotalPrix();
       updateQuantity(id, color, quantity);
-
+      calculTotalPrix();
 
     });
+
   });
 
- 
+
   // calcul de la quantité  
   const calculTotalQuantities = () => {
     const inputQuantities = document.querySelectorAll('.itemQuantity');
     const totalQuantity = document.getElementById('totalQuantity');
     let sum = 0;
     if (inputQuantities.length === 0) {
-      totalQuantity.innerHTML = 0; }
+      totalQuantity.innerHTML = 0;
+
+    }
     inputQuantities.forEach((inputQuantity) => {
       let quantity = parseInt(inputQuantity.value);
       let total = sum += quantity;
       totalQuantity.innerHTML = total;
 
+
     });
 
   };
 
-const totalPrice = document.getElementById('totalPrice');
 
-// calucul prix total 
-const calculTotalPrix = () => {
-let = toto = 0;
-panier.forEach((item) => {
-let id =  item.id ;
- quantity = item.quantity;
-let details = datas.find((i) => id === i._id ) 
- toto += quantity * details.price;
-console.log(toto);
 
-});
-totalPrice.innerHTML = toto ;
+  const calculTotalPrix = () => {
+    let totalPrice = 0;
+    const panier = loadPanier();
+    panier.forEach((item) => {
+      let details = datas.find((i) => item.id === i._id)
+      totalPrice += details.price * item.quantity;
+    });
+    document.getElementById('totalPrice').innerHTML = totalPrice;
+  };
+
+
+  calculTotalQuantities();
+  calculTotalPrix();
+
+  panierVide();
+
+  // -------------------------------------------------------formulaire---------------------------------------------
+  // --------------- prenom 
+  const firstNameInput = document.getElementById('firstName');
+  const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+  // -------------nom
+  let lastNameInput = document.getElementById('lastName');
+  const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+  // ----------------address
+  const addressInput = document.getElementById('address');
+  const addressErrorMsg = document.getElementById("addressErrorMsg");
+  //  ------------------city
+  const cityInput = document.getElementById('city');
+  const cityErrorMsg = document.getElementById('cityErrorMsg');
+  //  -------------------email
+  const emailInput = document.getElementById('email');
+  const emailErrorMsg = document.getElementById('emailErrorMsg')
+
+  // ---------------------------------------------------------regle regex --------------------------------
+  const firstNameRegex = /^[a-zA-Z-éàè]{3,30}$/;
+  const lastNameRegex = /^[a-zA-Z-éàè]{3,30}$/;
+  const addressRegex =  /^(?:(?:Domaine\sde|lieu-dit)\s)?\w+(\s\w+)*(?:-\w+(\s\w+)*)*$|^\d{1,2}\s\w+(\s\w+)*(?:-\w+(\s\w+)*)*$/;
+  const cityRegex = /^[a-zA-Z-éàè]{3,30}$/;
+  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+
+  const champsValid = (erreurMesg, inputValid) => {
+    inputValid.style.backgroundColor = '#B6FEB6'
+    erreurMesg.style.display = "none";
+    return true;
+  };
+
+  const erreur = (erreurMesg, inputNotValid) => {
+    erreurMesg.style.display = "block";
+    erreurMesg.style.color = '#FFFFFF';
+    erreurMesg.innerHTML = "le champs n'est pas valide ";
+    inputNotValid.style.backgroundColor = '#FD6D6D';
+    return true;
+  };
+const formulaire = () => {
+
+
+  // verification du prenom revoie une erreur si le prenon n'est pas valide 
+  firstNameInput.addEventListener("input", () => {
+
+    if (firstNameRegex.test(firstNameInput.value)) {
+      champsValid(firstNameErrorMsg, firstNameInput);
+    } else {
+      erreur(firstNameErrorMsg, firstNameInput);
+    };
+  });
+
+  // ---------------------------------------------verification du nom
+  lastNameInput.addEventListener("input", () => {
+    
+    if (lastNameRegex.test(lastNameInput.value)) {
+      champsValid(lastNameErrorMsg, lastNameInput);
+    } else {
+      erreur(lastNameErrorMsg, lastNameInput);
+    };
+  });
+  // ---------------------------------------------verification address
+  addressInput.addEventListener("input", () => {
+    if (addressRegex.test(addressInput.value)) {
+      champsValid(addressErrorMsg, addressInput);
+      
+    } else {
+      erreur(addressErrorMsg, addressInput);
+    };
+  });
+
+
+  cityInput.addEventListener("input", () => {
+    if (cityRegex.test(cityInput.value)) {
+      champsValid(cityErrorMsg, cityInput);
+     
+    } else {
+      erreur(cityErrorMsg, cityInput);
+    };
+  });
+
+ 
+
+  emailInput.addEventListener("input", () => {
+    if (emailRegex.test(emailInput.value)) {
+      champsValid(emailErrorMsg, emailInput);
+    
+    } else {
+      erreur(emailErrorMsg, emailInput);
+    };
+    
+  });
+// infoClients();
 };
+// const infoClients = () => {
+//   const infoClient = {
+//     firstName: firstNameInput.value,
+//     lastName : lastNameInput.value,
+//     address: addressInput.value,
+//     city : cityInput.value,
+//     email: emailInput.value,
+//   }
+// console.log();
+  
+// };
+// const buttonOrder = getElementById('order'); 
+// buttonOrder.addEventListener("click, ()"{
+// panier.push(infoClients());
+// })
+// console.log(infoClients())
 
-calculTotalQuantities();
-calculTotalPrix();
+
+formulaire();
+
 };
 afficherItemspanier();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// firstNameInput.addEventListener("input", () => {
+
+//   if (firstNameRegex.test(firstNameInput.value)) {
+//     // cacher le message d'erreur
+//     firstNameInput.style.backgroundColor = '#FFFFFF'
+//     firstNameErrorMsg.style.display = "none";
+//   } else {
+//     // Afficher le message d'erreur
+//     firstNameInput.style.backgroundColor = '#FD6D6D'
+//     firstNameErrorMsg.style.display = "block";
+//     firstNameErrorMsg.innerHTML = "Veuillez entrer un prénom valide";
+//   }
+// });
+
+
+// // ---------------------------------------------verification du nom
+// lastNameInput.addEventListener("input", () => {
+
+//   if (lastNameRegex.test(lastNameInput.value)) {
+//     lastNameInput.style.backgroundColor = '#FFFFFF'
+//     lastNameErrorMsg.style.display = "none";
+
+//   } else {
+
+//     lastNameInput.style.backgroundColor = '#FD6D6D';
+//     lastNameErrorMsg.style.display = "block";
+//     lastNameErrorMsg.style.color = '#FFFFFF'
+//     lastNameErrorMsg.innerHTML = "Veuillez entrer un nom valide";
+
+//   }
+
+// });
