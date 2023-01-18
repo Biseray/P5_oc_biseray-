@@ -64,7 +64,7 @@ const supprimerProduit = (id) => {
 };
 
 
-  // console.log();
+
 
 // ajout au panier 
 

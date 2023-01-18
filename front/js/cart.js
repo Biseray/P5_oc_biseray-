@@ -48,7 +48,7 @@ const afficherItemspanier = async () => {
 
 
   });
-  // console.log(cardsPanier);
+
   articlePanier.innerHTML = cardsPanier;
 
   // bouton suppression element
@@ -77,19 +77,21 @@ const afficherItemspanier = async () => {
 
   inputQuantities.forEach((inputQuantity) => {
     inputQuantity.addEventListener('change', () => {
-      let quantity = inputQuantity.value;
+      let quantity = parseInt(inputQuantity.value);
       let id = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.id;
       let color = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.color;
       if (limiteQuantity(inputQuantity.value)) {
-
-      } else {
-        console.log("ok");
-        inputQuantity.value = 100;
-        updateQuantity(id, color, inputQuantity.value);
-      }
-      calculTotalQuantities();
+        calculTotalQuantities();
       updateQuantity(id, color, quantity);
       calculTotalPrix();
+      } else {
+        inputQuantity.value = parseInt(100) ;
+        updateQuantity(id, color, inputQuantity.value );
+        calculTotalQuantities();
+      
+      calculTotalPrix();
+      };
+      
 
     });
 
@@ -150,10 +152,10 @@ const afficherItemspanier = async () => {
   const emailErrorMsg = document.getElementById('emailErrorMsg')
 
   // ---------------------------------------------------------regle regex --------------------------------
-  const firstNameRegex = /^[\w\u00C0-\u017F-]{3,30}$/;
-  const lastNameRegex = /^[\w\u00C0-\u017F-]{3,30}$/;
-  const addressRegex = /^(?:(?:Domaine\sde|lieu-dit)\s)?[\w\u00C0-\u017F-]{2,20}(\s[\w\u00C0-\u017F-]{0,20})(?:-[\w\u00C0-\u017F-]{0,20}(\s[\w\u00C0-\u017F-]{0,20}))*$|^\d{1,2}\s[\w\u00C0-\u017F-]{0,20}(\s[\w\u00C0-\u017F-]{0,20})(?:-[\w\u00C0-\u017F-]{0,20}(\s[\w\u00C0-\u017F-]{0,20}))*$/;
-  const cityRegex = /^[\w\u00C0-\u017F-]{3,30}/;
+  const firstNameRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
+  const lastNameRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
+  const addressRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
+  const cityRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 
@@ -169,7 +171,7 @@ const afficherItemspanier = async () => {
     erreurMesg.style.color = '#FFFFFF';
     erreurMesg.innerHTML = "le champs n'est pas valide ";
     inputNotValid.style.backgroundColor = '#FD6D6D';
-    return true;
+    return false;
   };
   const formulaire = () => {
 
@@ -182,6 +184,7 @@ const afficherItemspanier = async () => {
       } else {
         erreur(firstNameErrorMsg, firstNameInput);
       };
+      console.log(firstNameRegex.test(firstNameInput.value) == true )
     });
 
     // ---------------------------------------------verification du nom
