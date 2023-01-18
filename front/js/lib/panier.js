@@ -7,8 +7,9 @@ const limiteQuantity = (quantity) => {
   if (quantity < 1 || quantity > 100) {
     alert('choisissez une quantité entre 1 et 100 ');
     return false;
+   
   }
- 
+  
   return true;
 
 };
@@ -25,9 +26,6 @@ const panierVide = () => {
 
 
 
-
-
-
 // local storage 
 
 const loadPanier = () => {
@@ -36,7 +34,7 @@ const loadPanier = () => {
 };
 const savePanier = (panier) => {
   localStorage.setItem('panier', JSON.stringify(panier));
-  // limitePanier(panier);
+
 };
 
 
@@ -66,6 +64,7 @@ const supprimerProduit = (id) => {
 };
 
 
+  // console.log();
 
 // ajout au panier 
 

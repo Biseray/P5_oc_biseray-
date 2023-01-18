@@ -10,7 +10,7 @@ const afficherItemspanier = async () => {
   }
   window.parent.document.title = 'Panier';
   console.log(datas);
-
+  panierVide();
 
 
   const articlePanier = document.getElementById('cart__items');
@@ -66,11 +66,9 @@ const afficherItemspanier = async () => {
       calculTotalQuantities();
       calculTotalPrix();
       panierVide();
-
     });
 
   };
-
 
 
 
@@ -82,7 +80,13 @@ const afficherItemspanier = async () => {
       let quantity = inputQuantity.value;
       let id = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.id;
       let color = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.color;
-      limiteQuantity(quantity);
+      if (limiteQuantity(inputQuantity.value)) {
+
+      } else {
+        console.log("ok");
+        inputQuantity.value = 100;
+        updateQuantity(id, color, inputQuantity.value);
+      }
       calculTotalQuantities();
       updateQuantity(id, color, quantity);
       calculTotalPrix();
@@ -99,8 +103,7 @@ const afficherItemspanier = async () => {
     let sum = 0;
     if (inputQuantities.length === 0) {
       totalQuantity.innerHTML = 0;
-
-    }
+    };
     inputQuantities.forEach((inputQuantity) => {
       let quantity = parseInt(inputQuantity.value);
       let total = sum += quantity;
@@ -127,7 +130,7 @@ const afficherItemspanier = async () => {
   calculTotalQuantities();
   calculTotalPrix();
 
-  panierVide();
+
 
   // -------------------------------------------------------formulaire---------------------------------------------
   // --------------- prenom 
@@ -147,16 +150,17 @@ const afficherItemspanier = async () => {
   const emailErrorMsg = document.getElementById('emailErrorMsg')
 
   // ---------------------------------------------------------regle regex --------------------------------
-  const firstNameRegex = /^[a-zA-Z-éàè]{3,30}$/;
-  const lastNameRegex = /^[a-zA-Z-éàè]{3,30}$/;
-  const addressRegex =  /^(?:(?:Domaine\sde|lieu-dit)\s)?\w+(\s\w+)*(?:-\w+(\s\w+)*)*$|^\d{1,2}\s\w+(\s\w+)*(?:-\w+(\s\w+)*)*$/;
-  const cityRegex = /^[a-zA-Z-éàè]{3,30}$/;
+  const firstNameRegex = /^[\w\u00C0-\u017F-]{3,30}$/;
+  const lastNameRegex = /^[\w\u00C0-\u017F-]{3,30}$/;
+  const addressRegex = /^(?:(?:Domaine\sde|lieu-dit)\s)?[\w\u00C0-\u017F-]{2,20}(\s[\w\u00C0-\u017F-]{0,20})(?:-[\w\u00C0-\u017F-]{0,20}(\s[\w\u00C0-\u017F-]{0,20}))*$|^\d{1,2}\s[\w\u00C0-\u017F-]{0,20}(\s[\w\u00C0-\u017F-]{0,20})(?:-[\w\u00C0-\u017F-]{0,20}(\s[\w\u00C0-\u017F-]{0,20}))*$/;
+  const cityRegex = /^[\w\u00C0-\u017F-]{3,30}/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 
   const champsValid = (erreurMesg, inputValid) => {
     inputValid.style.backgroundColor = '#B6FEB6'
     erreurMesg.style.display = "none";
+    
     return true;
   };
 
@@ -167,80 +171,63 @@ const afficherItemspanier = async () => {
     inputNotValid.style.backgroundColor = '#FD6D6D';
     return true;
   };
-const formulaire = () => {
+  const formulaire = () => {
 
 
-  // verification du prenom revoie une erreur si le prenon n'est pas valide 
-  firstNameInput.addEventListener("input", () => {
+    // verification du prenom revoie une erreur si le prenon n'est pas valide 
+    firstNameInput.addEventListener("input", () => {
 
-    if (firstNameRegex.test(firstNameInput.value)) {
-      champsValid(firstNameErrorMsg, firstNameInput);
-    } else {
-      erreur(firstNameErrorMsg, firstNameInput);
-    };
-  });
+      if (firstNameRegex.test(firstNameInput.value)) {
+        champsValid(firstNameErrorMsg, firstNameInput);
+      } else {
+        erreur(firstNameErrorMsg, firstNameInput);
+      };
+    });
 
-  // ---------------------------------------------verification du nom
-  lastNameInput.addEventListener("input", () => {
-    
-    if (lastNameRegex.test(lastNameInput.value)) {
-      champsValid(lastNameErrorMsg, lastNameInput);
-    } else {
-      erreur(lastNameErrorMsg, lastNameInput);
-    };
-  });
-  // ---------------------------------------------verification address
-  addressInput.addEventListener("input", () => {
-    if (addressRegex.test(addressInput.value)) {
-      champsValid(addressErrorMsg, addressInput);
-      
-    } else {
-      erreur(addressErrorMsg, addressInput);
-    };
-  });
+    // ---------------------------------------------verification du nom
+    lastNameInput.addEventListener("input", () => {
+
+      if (lastNameRegex.test(lastNameInput.value)) {
+        champsValid(lastNameErrorMsg, lastNameInput);
+      } else {
+        erreur(lastNameErrorMsg, lastNameInput);
+      };
+    });
+    // ---------------------------------------------verification address
+    addressInput.addEventListener("input", () => {
+      if (addressRegex.test(addressInput.value)) {
+        champsValid(addressErrorMsg, addressInput);
+
+      } else {
+        erreur(addressErrorMsg, addressInput);
+      };
+    });
 
 
-  cityInput.addEventListener("input", () => {
-    if (cityRegex.test(cityInput.value)) {
-      champsValid(cityErrorMsg, cityInput);
-     
-    } else {
-      erreur(cityErrorMsg, cityInput);
-    };
-  });
+    cityInput.addEventListener("input", () => {
+      if (cityRegex.test(cityInput.value)) {
+        champsValid(cityErrorMsg, cityInput);
 
+      } else {
+        erreur(cityErrorMsg, cityInput);
+      };
+    });
+
+
+
+    emailInput.addEventListener("input", () => {
+      if (emailRegex.test(emailInput.value)) {
+        champsValid(emailErrorMsg, emailInput);
+
+      } else {
+        erreur(emailErrorMsg, emailInput);
+      };
+
+    });
  
-
-  emailInput.addEventListener("input", () => {
-    if (emailRegex.test(emailInput.value)) {
-      champsValid(emailErrorMsg, emailInput);
-    
-    } else {
-      erreur(emailErrorMsg, emailInput);
-    };
-    
-  });
-// infoClients();
 };
-// const infoClients = () => {
-//   const infoClient = {
-//     firstName: firstNameInput.value,
-//     lastName : lastNameInput.value,
-//     address: addressInput.value,
-//     city : cityInput.value,
-//     email: emailInput.value,
-//   }
-// console.log();
-  
-// };
-// const buttonOrder = getElementById('order'); 
-// buttonOrder.addEventListener("click, ()"{
-// panier.push(infoClients());
-// })
-// console.log(infoClients())
-
-
 formulaire();
+
 
 };
 afficherItemspanier();
