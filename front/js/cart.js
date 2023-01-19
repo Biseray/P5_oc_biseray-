@@ -1,5 +1,4 @@
 
-
 const afficherItemspanier = async () => {
 
   const datas = await get(`http://localhost:3000/api/products/`);
@@ -61,8 +60,9 @@ const afficherItemspanier = async () => {
     deleteItemButtons[a].addEventListener('click', function () {
       const elementToDelete = this.closest(".cart__item");
       const id = elementToDelete.getAttribute('data-id');
+      const color = elementToDelete.getAttribute('data-color');
       elementToDelete.remove();
-      supprimerProduit(id);
+      supprimerProduit(id, color);
       calculTotalQuantities();
       calculTotalPrix();
       panierVide();
@@ -80,18 +80,19 @@ const afficherItemspanier = async () => {
       let quantity = parseInt(inputQuantity.value);
       let id = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.id;
       let color = inputQuantity.parentElement.parentElement.parentElement.parentElement.dataset.color;
+      console.log(color);
       if (limiteQuantity(inputQuantity.value)) {
         calculTotalQuantities();
-      updateQuantity(id, color, quantity);
-      calculTotalPrix();
+        updateQuantity(id, color, quantity);
+        calculTotalPrix();
       } else {
-        inputQuantity.value = parseInt(100) ;
-        updateQuantity(id, color, inputQuantity.value );
+        inputQuantity.value = parseInt(100);
+        updateQuantity(id, color, inputQuantity.value);
         calculTotalQuantities();
-      
-      calculTotalPrix();
+
+        calculTotalPrix();
       };
-      
+
 
     });
 
@@ -128,7 +129,6 @@ const afficherItemspanier = async () => {
     document.getElementById('totalPrice').innerHTML = totalPrice;
   };
 
-
   calculTotalQuantities();
   calculTotalPrix();
 
@@ -152,54 +152,73 @@ const afficherItemspanier = async () => {
   const emailErrorMsg = document.getElementById('emailErrorMsg')
 
   // ---------------------------------------------------------regle regex --------------------------------
-  const firstNameRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
-  const lastNameRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
-  const addressRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
-  const cityRegex = /^[a-zA-Z\u00C0-\u017F-]{3,30}$/;
+  const firstNameRegex = /^[a-zA-Z\u00C0-\u017F-\s]{1,30}$/;
+  const lastNameRegex = /^[a-zA-Z\u00C0-\u017F-\s]{1,30}$/;
+  const addressRegex = /^[a-zA-Z0-9\u00C0-\u017F-\s]{5,30}$/;
+  const cityRegex = /^[a-zA-Z\u00C0-\u017F-\s]{1,30}$/;
   const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 
+
+  let isFormValid = true;
+  // fonction qui verifie que le champs n'est pas vide si cest le cas il renvoie une erreur
+  const notEmpty = (value) => {
+    if (value.trim().length === 0) {
+      isFormValid = false;
+    };
+    return  true;
+
+  };
+  //fonction qui est appeller si le regex est  valide 
   const champsValid = (erreurMesg, inputValid) => {
     inputValid.style.backgroundColor = '#B6FEB6'
     erreurMesg.style.display = "none";
-    
-    return true;
-  };
 
+
+  };
+  // fonction qui est appeller si le regex n'est pas valide  
   const erreur = (erreurMesg, inputNotValid) => {
     erreurMesg.style.display = "block";
     erreurMesg.style.color = '#FFFFFF';
     erreurMesg.innerHTML = "le champs n'est pas valide ";
     inputNotValid.style.backgroundColor = '#FD6D6D';
-    return false;
+    isFormValid = false;
   };
+
+
+
+
   const formulaire = () => {
-
-
     // verification du prenom revoie une erreur si le prenon n'est pas valide 
     firstNameInput.addEventListener("input", () => {
 
-      if (firstNameRegex.test(firstNameInput.value)) {
+      if (notEmpty(firstNameInput.value) && firstNameRegex.test(firstNameInput.value)) {
         champsValid(firstNameErrorMsg, firstNameInput);
+
       } else {
         erreur(firstNameErrorMsg, firstNameInput);
       };
-      console.log(firstNameRegex.test(firstNameInput.value) == true )
+      console.log(firstNameRegex.test(firstNameInput.value))
     });
 
     // ---------------------------------------------verification du nom
     lastNameInput.addEventListener("input", () => {
 
-      if (lastNameRegex.test(lastNameInput.value)) {
+      if (notEmpty(lastNameInput.value) && lastNameRegex.test(lastNameInput.value)) {
         champsValid(lastNameErrorMsg, lastNameInput);
+
+
       } else {
         erreur(lastNameErrorMsg, lastNameInput);
+
       };
+
     });
     // ---------------------------------------------verification address
     addressInput.addEventListener("input", () => {
-      if (addressRegex.test(addressInput.value)) {
+      if (notEmpty(lastNameInput.value) && addressRegex.test(addressInput.value)) {
         champsValid(addressErrorMsg, addressInput);
+
 
       } else {
         erreur(addressErrorMsg, addressInput);
@@ -208,7 +227,7 @@ const afficherItemspanier = async () => {
 
 
     cityInput.addEventListener("input", () => {
-      if (cityRegex.test(cityInput.value)) {
+      if (notEmpty(lastNameInput.value) && cityRegex.test(cityInput.value)) {
         champsValid(cityErrorMsg, cityInput);
 
       } else {
@@ -217,9 +236,8 @@ const afficherItemspanier = async () => {
     });
 
 
-
     emailInput.addEventListener("input", () => {
-      if (emailRegex.test(emailInput.value)) {
+      if (notEmpty(emailInput.value) && emailRegex.test(emailInput.value)) {
         champsValid(emailErrorMsg, emailInput);
 
       } else {
@@ -227,12 +245,51 @@ const afficherItemspanier = async () => {
       };
 
     });
- 
-};
-formulaire();
 
 
+    const message = document.querySelectorAll(".cart__order__form p");
+    message.innerHTML = "ecris";
+    console.log(message)
+
+    const buttonOrder = document.getElementById('order');
+    buttonOrder.addEventListener("click", function (e) {
+
+      const inputs = document.querySelectorAll(".cart__order__form input");
+      //  inputs.forEach((input) => {
+      //   if (!input.value) {
+      //     isFormValid = false;
+      // } 
+      //  });
+      if (!firstNameInput.value || !lastNameInput.value || !emailInput.value || !cityInput.value || !addressInput.value)
+{
+  isFormValid = false;
+}
+        if (isFormValid === true) {
+          alert('ok');
+        } else {
+          alert('error');
+          e.preventDefault();
+          inputs.forEach((input) => {
+            if (!input.value) {
+              console.log(input.value);
+              input.style.backgroundColor = '#FD6D6D';
+            }
+          });
+         
+        }
+
+    });
+
+  };
+  formulaire();
 };
+
+
+
+
+
+
+
 afficherItemspanier();
 
 
@@ -290,35 +347,3 @@ afficherItemspanier();
 
 
 
-// firstNameInput.addEventListener("input", () => {
-
-//   if (firstNameRegex.test(firstNameInput.value)) {
-//     // cacher le message d'erreur
-//     firstNameInput.style.backgroundColor = '#FFFFFF'
-//     firstNameErrorMsg.style.display = "none";
-//   } else {
-//     // Afficher le message d'erreur
-//     firstNameInput.style.backgroundColor = '#FD6D6D'
-//     firstNameErrorMsg.style.display = "block";
-//     firstNameErrorMsg.innerHTML = "Veuillez entrer un prénom valide";
-//   }
-// });
-
-
-// // ---------------------------------------------verification du nom
-// lastNameInput.addEventListener("input", () => {
-
-//   if (lastNameRegex.test(lastNameInput.value)) {
-//     lastNameInput.style.backgroundColor = '#FFFFFF'
-//     lastNameErrorMsg.style.display = "none";
-
-//   } else {
-
-//     lastNameInput.style.backgroundColor = '#FD6D6D';
-//     lastNameErrorMsg.style.display = "block";
-//     lastNameErrorMsg.style.color = '#FFFFFF'
-//     lastNameErrorMsg.innerHTML = "Veuillez entrer un nom valide";
-
-//   }
-
-// });

@@ -52,10 +52,10 @@ const updateQuantity = (id, color, quantity) => {
 
 
 // delete element
-const supprimerProduit = (id) => {
+const supprimerProduit = (id, color) => {
   const panier = loadPanier();
   for (let a = 0; a < panier.length; a++) {
-    if (panier[a].id === id) {
+    if (panier[a].id === id && panier[a].color === color) {
       panier.splice(a, 1);
       savePanier(panier);
       break;

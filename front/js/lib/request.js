@@ -12,4 +12,8 @@ const get = async (url) => {
     return -1;
   };
 
+  const post = (url, datas) => {
+    
+  }
+
 
