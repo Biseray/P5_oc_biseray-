@@ -3,6 +3,8 @@ const realodPage = () => {
 };
 const datasProduct = fetch('http://localhost:3000/api/products/');
 
+
+// crée une limite de quantité de 1 a 100 
 const limiteQuantity = (quantity) => {
   if (quantity < 1 || quantity > 100) {
     alert('choisissez une quantité entre 1 et 100 ');
@@ -15,7 +17,7 @@ const limiteQuantity = (quantity) => {
 };
 
 
-
+// fonction panier vide qui renvoie a la page dacceuil si aucun article est present dans le panier 
 const panierVide = () => {
   if (loadPanier().length === 0) {
     alert('panier vide ! ');
@@ -40,7 +42,7 @@ const savePanier = (panier) => {
 
 
 
-
+//  fonction qui actualise la quantité du produit en verifiant id & color
 const updateQuantity = (id, color, quantity) => {
   const panier = loadPanier();
   let article = panier.find((item) => item.id === id && item.color === color);

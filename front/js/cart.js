@@ -17,7 +17,7 @@ const afficherItemspanier = async () => {
 
 
   let cardsPanier = '';
-
+//  creation de la produit dans le panier 
   let panier = loadPanier();
   panier.forEach((item) => {
     let details = datas.find((i) => item.id === i._id)
@@ -72,7 +72,7 @@ const afficherItemspanier = async () => {
 
 
 
-  // modfication de la quantité dans le panier 
+  // modfication de la quantité dans le panier en prenant compte de l id et de la couleur du produit séléctionner 
 
 
   inputQuantities.forEach((inputQuantity) => {
@@ -85,22 +85,22 @@ const afficherItemspanier = async () => {
         calculTotalQuantities();
         updateQuantity(id, color, quantity);
         calculTotalPrix();
-        savePanier(panier)
+
       } else {
         inputQuantity.value = parseInt(100);
         updateQuantity(id, color, inputQuantity.value);
         calculTotalQuantities();
-        savePanier(panier)
+
         calculTotalPrix();
       };
-      savePanier(panier)
+
       updateQuantity(id, color, quantity);
     });
-    
+
   });
 
 
-  // calcul de la quantité  
+  // calcul de la quantité  total dans le panier
   const calculTotalQuantities = () => {
     const inputQuantities = document.querySelectorAll('.itemQuantity');
     const totalQuantity = document.getElementById('totalQuantity');
@@ -119,7 +119,7 @@ const afficherItemspanier = async () => {
   };
 
 
-
+  // calcul du prix total en prenant compte du nombre et du prix de chaque article
   const calculTotalPrix = () => {
     let totalPrice = 0;
     let panier = loadPanier();
@@ -249,17 +249,20 @@ const afficherItemspanier = async () => {
 
 
 
-
+    // localisation des inputs ainsi que des messages erreurs 
     const inputs = document.querySelectorAll(".cart__order__form input");
     const messageErreur = document.querySelectorAll(".cart__order__form__question p ");
 
-    console.log(messageErreur);
+
+    // ecoute du bouton order 
     const buttonOrder = document.getElementById('order');
+    // verrifie que tout les valeurs renvoie true
     buttonOrder.addEventListener("click", function (e) {
       if (!firstNameInput.value || !lastNameInput.value || !emailInput.value || !cityInput.value || !addressInput.value) {
         isFormValid = false;
       }
       if (isFormValid === true) {
+        // si valide ajout des informations puis envoie au serveur 
         e.preventDefault();
         alert('ok');
         let panier = loadPanier();
@@ -269,26 +272,26 @@ const afficherItemspanier = async () => {
           adress: addressInput.value,
           city: cityInput.value,
           email: emailInput.value,
-        productID: panier,
-         }
+          productID: panier,
+        }
         console.log(data);
-         
-         
+
+
       } else {
-        
+        // sinon affiche une alerte sur les champs qui ne sont pas indiquer 
         e.preventDefault();
-        
+
         alert('error');
         inputs.forEach((input) => {
           if (!input.value) {
-           
+
             console.log(input.value);
             input.style.backgroundColor = '#FD6D6D';
             messageErreur.forEach((erreur) => {
               erreur === input;
               erreur.style.color = '#FFFFFF';
               erreur.innerText = 'Veuillez renseigner le champ !'
-            
+
             })
           }
         });
