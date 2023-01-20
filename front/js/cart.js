@@ -18,7 +18,7 @@ const afficherItemspanier = async () => {
 
   let cardsPanier = '';
 
-  const panier = loadPanier();
+  let panier = loadPanier();
   panier.forEach((item) => {
     let details = datas.find((i) => item.id === i._id)
     cardsPanier +=
@@ -85,17 +85,18 @@ const afficherItemspanier = async () => {
         calculTotalQuantities();
         updateQuantity(id, color, quantity);
         calculTotalPrix();
+        savePanier(panier)
       } else {
         inputQuantity.value = parseInt(100);
         updateQuantity(id, color, inputQuantity.value);
         calculTotalQuantities();
-
+        savePanier(panier)
         calculTotalPrix();
       };
-
-
+      savePanier(panier)
+      updateQuantity(id, color, quantity);
     });
-
+    
   });
 
 
@@ -121,7 +122,7 @@ const afficherItemspanier = async () => {
 
   const calculTotalPrix = () => {
     let totalPrice = 0;
-    const panier = loadPanier();
+    let panier = loadPanier();
     panier.forEach((item) => {
       let details = datas.find((i) => item.id === i._id)
       totalPrice += details.price * item.quantity;
@@ -164,16 +165,16 @@ const afficherItemspanier = async () => {
   // fonction qui verifie que le champs n'est pas vide si cest le cas il renvoie une erreur
   const notEmpty = (value) => {
     if (value.trim().length === 0) {
-      isFormValid = false;
+      return false;
     };
-    return  true;
+    return true;
 
   };
   //fonction qui est appeller si le regex est  valide 
   const champsValid = (erreurMesg, inputValid) => {
     inputValid.style.backgroundColor = '#B6FEB6'
     erreurMesg.style.display = "none";
-
+    isFormValid = true;
 
   };
   // fonction qui est appeller si le regex n'est pas valide  
@@ -191,7 +192,7 @@ const afficherItemspanier = async () => {
   const formulaire = () => {
     // verification du prenom revoie une erreur si le prenon n'est pas valide 
     firstNameInput.addEventListener("input", () => {
-
+      console.log(firstNameInput.value.length);
       if (notEmpty(firstNameInput.value) && firstNameRegex.test(firstNameInput.value)) {
         champsValid(firstNameErrorMsg, firstNameInput);
 
@@ -216,7 +217,7 @@ const afficherItemspanier = async () => {
     });
     // ---------------------------------------------verification address
     addressInput.addEventListener("input", () => {
-      if (notEmpty(lastNameInput.value) && addressRegex.test(addressInput.value)) {
+      if (notEmpty(addressInput.value) && addressRegex.test(addressInput.value)) {
         champsValid(addressErrorMsg, addressInput);
 
 
@@ -227,7 +228,7 @@ const afficherItemspanier = async () => {
 
 
     cityInput.addEventListener("input", () => {
-      if (notEmpty(lastNameInput.value) && cityRegex.test(cityInput.value)) {
+      if (notEmpty(cityInput.value) && cityRegex.test(cityInput.value)) {
         champsValid(cityErrorMsg, cityInput);
 
       } else {
@@ -247,49 +248,58 @@ const afficherItemspanier = async () => {
     });
 
 
-    const message = document.querySelectorAll(".cart__order__form p");
-    message.innerHTML = "ecris";
-    console.log(message)
 
+
+    const inputs = document.querySelectorAll(".cart__order__form input");
+    const messageErreur = document.querySelectorAll(".cart__order__form__question p ");
+
+    console.log(messageErreur);
     const buttonOrder = document.getElementById('order');
     buttonOrder.addEventListener("click", function (e) {
-
-      const inputs = document.querySelectorAll(".cart__order__form input");
-      //  inputs.forEach((input) => {
-      //   if (!input.value) {
-      //     isFormValid = false;
-      // } 
-      //  });
-      if (!firstNameInput.value || !lastNameInput.value || !emailInput.value || !cityInput.value || !addressInput.value)
-{
-  isFormValid = false;
-}
-        if (isFormValid === true) {
-          alert('ok');
-        } else {
-          alert('error');
-          e.preventDefault();
-          inputs.forEach((input) => {
-            if (!input.value) {
-              console.log(input.value);
-              input.style.backgroundColor = '#FD6D6D';
-            }
-          });
+      if (!firstNameInput.value || !lastNameInput.value || !emailInput.value || !cityInput.value || !addressInput.value) {
+        isFormValid = false;
+      }
+      if (isFormValid === true) {
+        e.preventDefault();
+        alert('ok');
+        let panier = loadPanier();
+        let data = {
+          fisrtName: firstNameInput.value,
+          lastName: lastNameInput.value,
+          adress: addressInput.value,
+          city: cityInput.value,
+          email: emailInput.value,
+        productID: panier,
+         }
+        console.log(data);
          
-        }
-
+         
+      } else {
+        
+        e.preventDefault();
+        
+        alert('error');
+        inputs.forEach((input) => {
+          if (!input.value) {
+           
+            console.log(input.value);
+            input.style.backgroundColor = '#FD6D6D';
+            messageErreur.forEach((erreur) => {
+              erreur === input;
+              erreur.style.color = '#FFFFFF';
+              erreur.innerText = 'Veuillez renseigner le champ !'
+            
+            })
+          }
+        });
+      }
     });
 
-  };
+  }
+
+
   formulaire();
 };
-
-
-
-
-
-
-
 afficherItemspanier();
 
 

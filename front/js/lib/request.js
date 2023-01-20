@@ -1,3 +1,5 @@
+
+
 const get = async (url) => {
     try {
       const response = await fetch(url);
@@ -12,8 +14,4 @@ const get = async (url) => {
     return -1;
   };
 
-  const post = (url, datas) => {
-    
-  }
-
-
+ 
