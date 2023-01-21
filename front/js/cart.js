@@ -7,6 +7,9 @@ const afficherItemspanier = async () => {
     alert("erreur"), RedirectionJs;
 
   }
+   
+
+
   window.parent.document.title = 'Panier';
   console.log(datas);
   panierVide();
@@ -17,7 +20,7 @@ const afficherItemspanier = async () => {
 
 
   let cardsPanier = '';
-//  creation de la produit dans le panier 
+  //  creation de la produit dans le panier 
   let panier = loadPanier();
   panier.forEach((item) => {
     let details = datas.find((i) => item.id === i._id)
@@ -265,18 +268,34 @@ const afficherItemspanier = async () => {
         // si valide ajout des informations puis envoie au serveur 
         e.preventDefault();
         alert('ok');
+
+        let product = [];
         let panier = loadPanier();
-        let data = {
-          fisrtName: firstNameInput.value,
-          lastName: lastNameInput.value,
-          adress: addressInput.value,
-          city: cityInput.value,
-          email: emailInput.value,
-          productID: panier,
-        }
-        console.log(data);
+        panier.forEach((produit) => {
+          if (produit.id === panier.id) {
+            product.push(produit.id)
+            console.log(product);
+          }
+        });
 
-
+        let orderData = {
+          contact: {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            address: addressInput.value,
+            city: cityInput.value,
+            email: emailInput.value,
+          },
+          product: product
+        };
+      
+          const postOrder = await post(`http://localhost:3000/api/products/order`, orderData);
+          if (postOrder === -1) {
+            alert('erreur lors de lenvoie');
+          }
+        
+      
+       
       } else {
         // sinon affiche une alerte sur les champs qui ne sont pas indiquer 
         e.preventDefault();
