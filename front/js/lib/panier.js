@@ -1,8 +1,10 @@
 const realodPage = () => {
   window.location.href = './cart.html';
 };
-const datasProduct = fetch('http://localhost:3000/api/products/');
 
+const RedirectionPAgeConfirmation = () =>  {
+  window.location.href = './confirmation.html';
+}
 
 // crée une limite de quantité de 1 a 100 
 const limiteQuantity = (quantity) => {

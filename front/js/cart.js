@@ -260,45 +260,42 @@ const afficherItemspanier = async () => {
     // ecoute du bouton order 
     const buttonOrder = document.getElementById('order');
     // verrifie que tout les valeurs renvoie true
-    buttonOrder.addEventListener("click", function (e) {
+    buttonOrder.addEventListener("click", async function(e) {
       if (!firstNameInput.value || !lastNameInput.value || !emailInput.value || !cityInput.value || !addressInput.value) {
         isFormValid = false;
       }
       if (isFormValid === true) {
         // si valide ajout des informations puis envoie au serveur 
-        e.preventDefault();
+     
         alert('ok');
-
+        // e.preventDefault();
         let product = [];
-        let panier = loadPanier();
-        panier.forEach((produit) => {
-          if (produit.id === panier.id) {
-            product.push(produit.id)
-            console.log(product);
-          }
-        });
+let panier = loadPanier();
+panier.forEach((produit) => {
+  if (produit.id ) {
+    product.push(produit.id);
+  }
+});
 
-        let orderData = {
-          contact: {
-            firstName: firstNameInput.value,
-            lastName: lastNameInput.value,
-            address: addressInput.value,
-            city: cityInput.value,
-            email: emailInput.value,
-          },
-          product: product
-        };
-      
-          const postOrder = await post(`http://localhost:3000/api/products/order`, orderData);
-          if (postOrder === -1) {
-            alert('erreur lors de lenvoie');
-          }
-        
-      
-       
-      } else {
+let orderData = {
+  contact: {
+    firstName: firstNameInput.value,
+    lastName: lastNameInput.value,
+    address: addressInput.value,
+    city: cityInput.value,
+    email: emailInput.value,
+  },
+  products: product
+};
+console.log(orderData);
+const postOrder = await post(`http://localhost:3000/api/products/order`, orderData);
+if ( postOrder === -1 ) {
+  alert('erreur lors de lenvoie ');
+}
+// localStorage.clear; 
+}else {
         // sinon affiche une alerte sur les champs qui ne sont pas indiquer 
-        e.preventDefault();
+        // e.preventDefault();
 
         alert('error');
         inputs.forEach((input) => {
@@ -309,7 +306,7 @@ const afficherItemspanier = async () => {
             messageErreur.forEach((erreur) => {
               erreur === input;
               erreur.style.color = '#FFFFFF';
-              erreur.innerText = 'Veuillez renseigner le champ !'
+              erreur.innerText = 'Veuillez renseigner le champ !';
 
             })
           }
