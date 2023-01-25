@@ -31,7 +31,7 @@ const get = async (url) => {
 //   })
 //   if (response.status === 200) {
 //     console.log('Commande envoyée avec succès !');
-   
+//    localStorage.clear;
 //     return await response.json(data.orderId);
     
 //   }   
