@@ -7,7 +7,7 @@ const afficherItemspanier = async () => {
     alert("erreur"), RedirectionJs;
 
   }
-   
+
 
 
   window.parent.document.title = 'Panier';
@@ -141,53 +141,25 @@ const afficherItemspanier = async () => {
   // -------------------------------------------------------formulaire---------------------------------------------
   // --------------- prenom 
   const firstNameInput = document.getElementById('firstName');
-  const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
+
   // -------------nom
   let lastNameInput = document.getElementById('lastName');
-  const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
+
   // ----------------address
   const addressInput = document.getElementById('address');
-  const addressErrorMsg = document.getElementById("addressErrorMsg");
+
   //  ------------------city
   const cityInput = document.getElementById('city');
-  const cityErrorMsg = document.getElementById('cityErrorMsg');
+
   //  -------------------email
   const emailInput = document.getElementById('email');
-  const emailErrorMsg = document.getElementById('emailErrorMsg')
-
-  // ---------------------------------------------------------regle regex --------------------------------
-  const firstNameRegex = /^[a-zA-Z\u00C0-\u017F-\s]{1,30}$/;
-  const lastNameRegex = /^[a-zA-Z\u00C0-\u017F-\s]{1,30}$/;
-  const addressRegex = /^[a-zA-Z0-9\u00C0-\u017F-\s]{5,30}$/;
-  const cityRegex = /^[a-zA-Z\u00C0-\u017F-\s]{1,30}$/;
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 
 
-  let isFormValid = true;
+
+  // let isFormValid = true;
   // fonction qui verifie que le champs n'est pas vide si cest le cas il renvoie une erreur
-  const notEmpty = (value) => {
-    if (value.trim().length === 0) {
-      return false;
-    };
-    return true;
-
-  };
-  //fonction qui est appeller si le regex est  valide 
-  const champsValid = (erreurMesg, inputValid) => {
-    inputValid.style.backgroundColor = '#B6FEB6'
-    erreurMesg.style.display = "none";
-    isFormValid = true;
-
-  };
-  // fonction qui est appeller si le regex n'est pas valide  
-  const erreur = (erreurMesg, inputNotValid) => {
-    erreurMesg.style.display = "block";
-    erreurMesg.style.color = '#FFFFFF';
-    erreurMesg.innerHTML = "le champs n'est pas valide ";
-    inputNotValid.style.backgroundColor = '#FD6D6D';
-    isFormValid = false;
-  };
+  
 
 
 
@@ -195,127 +167,80 @@ const afficherItemspanier = async () => {
   const formulaire = () => {
     // verification du prenom revoie une erreur si le prenon n'est pas valide 
     firstNameInput.addEventListener("input", () => {
-      console.log(firstNameInput.value.length);
-      if (notEmpty(firstNameInput.value) && firstNameRegex.test(firstNameInput.value)) {
-        champsValid(firstNameErrorMsg, firstNameInput);
-
-      } else {
-        erreur(firstNameErrorMsg, firstNameInput);
-      };
-      console.log(firstNameRegex.test(firstNameInput.value))
+      checkFirstName(firstNameInput);
     });
 
     // ---------------------------------------------verification du nom
     lastNameInput.addEventListener("input", () => {
 
-      if (notEmpty(lastNameInput.value) && lastNameRegex.test(lastNameInput.value)) {
-        champsValid(lastNameErrorMsg, lastNameInput);
-
-
-      } else {
-        erreur(lastNameErrorMsg, lastNameInput);
-
-      };
+      checkLastName(lastNameInput);
+      
 
     });
     // ---------------------------------------------verification address
     addressInput.addEventListener("input", () => {
-      if (notEmpty(addressInput.value) && addressRegex.test(addressInput.value)) {
-        champsValid(addressErrorMsg, addressInput);
-
-
-      } else {
-        erreur(addressErrorMsg, addressInput);
-      };
+      checkAddress(addressInput);
     });
 
 
     cityInput.addEventListener("input", () => {
-      if (notEmpty(cityInput.value) && cityRegex.test(cityInput.value)) {
-        champsValid(cityErrorMsg, cityInput);
-
-      } else {
-        erreur(cityErrorMsg, cityInput);
-      };
+      
+      checkCity(cityInput);
     });
 
 
     emailInput.addEventListener("input", () => {
-      if (notEmpty(emailInput.value) && emailRegex.test(emailInput.value)) {
-        champsValid(emailErrorMsg, emailInput);
-
-      } else {
-        erreur(emailErrorMsg, emailInput);
-      };
-
+      checkEmail(emailInput);
     });
 
 
 
     // localisation des inputs ainsi que des messages erreurs 
-    const inputs = document.querySelectorAll(".cart__order__form input");
-    const messageErreur = document.querySelectorAll(".cart__order__form__question p ");
+    // const inputs = document.querySelectorAll(".cart__order__form input");
+    // const messageErreur = document.querySelectorAll(".cart__order__form__question p ");
 
 
     // ecoute du bouton order 
     const buttonOrder = document.getElementById('order');
     // verrifie que tout les valeurs renvoie true
-    buttonOrder.addEventListener("click", async function(e) {
-      inputs.forEach((input) =>  {
-        if ( !input.value || input.value === false ){
-        
-          return isFormValid = false;
-          
-        }
-      })
-  
-      if (isFormValid === true) {
+    buttonOrder.addEventListener("click", async function (event) {
+      event.preventDefault();
+
+      if (checkFirstName(firstNameInput) &&  checkLastName(lastNameInput) && checkAddress(addressInput) && checkEmail(emailInput) && checkCity(cityInput) ) {  
         // si valide ajout des informations puis envoie au serveur 
-     
+
         alert('ok');
-        // e.preventDefault();
+
         let product = [];
-let panier = loadPanier();
-panier.forEach((produit) => {
-  if (produit.id ) {
-    product.push(produit.id);
-  }
-});
-
-let orderData = {
-  contact: {
-    firstName: firstNameInput.value,
-    lastName: lastNameInput.value,
-    address: addressInput.value,
-    city: cityInput.value,
-    email: emailInput.value,
-  },
-  products: product
-};
-console.log(orderData);
-const postOrder = await post(`http://localhost:3000/api/products/order`, orderData);
-if ( postOrder === -1 ) {
-  alert('erreur lors de lenvoie ');
-}
-// localStorage.clear; 
-}else {
-        // sinon affiche une alerte sur les champs qui ne sont pas indiquer 
-        e.preventDefault();
-
-        alert('error');
-        inputs.forEach((input) => {
-          if (!input.value) {
-
-            console.log(input.value);
-            input.style.backgroundColor = '#FD6D6D';
-            messageErreur.forEach((erreur) => {
-              erreur === input;
-              erreur.style.color = '#FFFFFF';
-              erreur.innerText = 'Veuillez renseigner le champ !';
-
-            })
+        let panier = loadPanier();
+        panier.forEach((produit) => {
+          if (produit.id) {
+            product.push(produit.id);
           }
         });
+
+        const orderData = {
+          contact: {
+            firstName: firstNameInput.value,
+            lastName: lastNameInput.value,
+            address: addressInput.value,
+            city: cityInput.value,
+            email: emailInput.value,
+          },
+          products: product,
+        };
+        console.log(orderData);
+
+        const postOrder = await post(`http://localhost:3000/api/products/order`, orderData);
+        if (postOrder === -1) {
+          alert('erreur lors de l\'envoie ');
+
+        } else {
+          console.log(postOrder);
+          window.location.href = `./confirmation.html?orderid=${postOrder.orderId}`;
+        }
+
+
       }
     });
 
