@@ -229,9 +229,10 @@ const afficherItemspanier = async () => {
           },
           products: product,
         };
-        console.log(orderData);
+       clearPanier();
 
         const postOrder = await post(`http://localhost:3000/api/products/order`, orderData);
+        
         if (postOrder === -1) {
           alert('erreur lors de l\'envoie ');
 

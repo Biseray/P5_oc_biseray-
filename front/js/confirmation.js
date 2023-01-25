@@ -1,11 +1,13 @@
 const affichageOrderId = () => {
-    const orderId =  searchParams.get("orderid");
-    const confirmationOrderId = document.getElementById('orderId');
+    const orderId =  new URL(location.href).searchParams.get("orderid");
     console.log(orderId);
-    confirmationOrderId.innerTexte    = orderId;
-    // if (orderId = ""){
-    //     window.href.location = 'index.html';
-    // }
+    const confirmationOrderId = document.getElementById('orderId');
+  
+    confirmationOrderId.innerHTML = orderId;
+    if (orderId !== orderId){
+
+        window.location.href = './cart.html';
+    };
 }
 
 affichageOrderId();

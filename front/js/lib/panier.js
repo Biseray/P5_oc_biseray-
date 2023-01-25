@@ -41,7 +41,9 @@ const savePanier = (panier) => {
 
 };
 
-
+const clearPanier = () => { 
+  localStorage.clear();
+}
 
 
 //  fonction qui actualise la quantité du produit en verifiant id & color
