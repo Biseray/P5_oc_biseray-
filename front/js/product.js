@@ -51,7 +51,7 @@ const showDetailItem = async () => {
       if (colorsItems) {
         // appelle de la fonction qui ajouter les produit dans le local storage 
         addProduct(quantityItems, colorsItems, datas );
-        // window.location.href = './cart.html';
+       
       } else {
         alert('choisissez une couleur');
       };

@@ -154,50 +154,35 @@ const afficherItemspanier = async () => {
   //  -------------------email
   const emailInput = document.getElementById('email');
 
-
-
-
-  // let isFormValid = true;
-  // fonction qui verifie que le champs n'est pas vide si cest le cas il renvoie une erreur
   
-
-
-
-
   const formulaire = () => {
-    // verification du prenom revoie une erreur si le prenon n'est pas valide 
+    // --------ecoute de l'input puis appelle de la fonction de verification 
     firstNameInput.addEventListener("input", () => {
       checkFirstName(firstNameInput);
     });
 
-    // ---------------------------------------------verification du nom
+    // --------ecoute de l'input puis appelle de la fonction de verification 
     lastNameInput.addEventListener("input", () => {
 
       checkLastName(lastNameInput);
-      
+
 
     });
-    // ---------------------------------------------verification address
+  // --------ecoute de l'input puis appelle de la fonction de verification 
     addressInput.addEventListener("input", () => {
       checkAddress(addressInput);
     });
 
-
+ // --------ecoute de l'input puis appelle de la fonction de verification 
     cityInput.addEventListener("input", () => {
-      
+
       checkCity(cityInput);
     });
 
-
+ // --------ecoute de l'input puis appelle de la fonction de verification 
     emailInput.addEventListener("input", () => {
       checkEmail(emailInput);
     });
-
-
-
-    // localisation des inputs ainsi que des messages erreurs 
-    // const inputs = document.querySelectorAll(".cart__order__form input");
-    // const messageErreur = document.querySelectorAll(".cart__order__form__question p ");
 
 
     // ecoute du bouton order 
@@ -206,11 +191,11 @@ const afficherItemspanier = async () => {
     buttonOrder.addEventListener("click", async function (event) {
       event.preventDefault();
 
-      if (checkFirstName(firstNameInput) &&  checkLastName(lastNameInput) && checkAddress(addressInput) && checkEmail(emailInput) && checkCity(cityInput) ) {  
+      if (checkFirstName(firstNameInput) && checkLastName(lastNameInput) && checkAddress(addressInput) && checkEmail(emailInput) && checkCity(cityInput)) {
         // si valide ajout des informations puis envoie au serveur 
 
-        alert('ok');
 
+        // creation de l'objet qui comprend les id des produits ainsi que les valeurs du formulaire
         let product = [];
         let panier = loadPanier();
         panier.forEach((produit) => {
@@ -229,18 +214,20 @@ const afficherItemspanier = async () => {
           },
           products: product,
         };
-       clearPanier();
 
+
+        // envoie de l'objet vers l'api
         const postOrder = await post(`http://localhost:3000/api/products/order`, orderData);
-        
+
         if (postOrder === -1) {
           alert('erreur lors de l\'envoie ');
-
+          // renvoie vers la page de confirmation et suppression du localstorage
         } else {
+          clearPanier();
+          alert('Commande envoyée avec succès !');
           console.log(postOrder);
           window.location.href = `./confirmation.html?orderid=${postOrder.orderId}`;
         }
-
 
       }
     });

@@ -30,7 +30,6 @@ const post = async (url, data) => {
 
   })
   if (response.status === 201) {
-    console.log('Commande envoyée avec succès !');
     return await response.json(data.orderId);
   }
   console.log('erreur');
